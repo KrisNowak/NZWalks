@@ -77,7 +77,7 @@ namespace NZWalks.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddRegionAsync(AddRegionRequest addRegionRequest)
+        public async Task<IActionResult> AddRegionAsync( [FromBody] AddRegionRequest addRegionRequest)
         {
             // Validate The Request
             //if (!ValidateAddRegionAsync(addRegionRequest))
