@@ -25,6 +25,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllWalksAsync()
         {
             var walks = await walkRepository.GetAllAsync();
@@ -40,6 +41,7 @@ namespace NZWalks.API.Controllers
         [HttpGet]
         [Route("{id:guid}")]
         [ActionName("GetWalkAsync")]
+        [Authorize]
         public async Task<IActionResult> GetWalkAsync(Guid id)
         {
             var walk = await walkRepository.GetAsync(id);
@@ -55,6 +57,7 @@ namespace NZWalks.API.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> AddWalkAsync([FromBody] AddWalkRequest addWalkRequest)
         {
             //Validate The Request
@@ -85,7 +88,7 @@ namespace NZWalks.API.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        //[Authorize(Roles = "writer")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteWalkAsync(Guid id)
         {
             // Get region from database
@@ -107,7 +110,7 @@ namespace NZWalks.API.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        //[Authorize(Roles = "writer")]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateWalkAsync([FromRoute] Guid id, [FromBody] UpdateWalkRequest updateRegionRequest)
         {
             // Validate the incoming request
@@ -147,20 +150,20 @@ namespace NZWalks.API.Controllers
         #region Private mnethoids
         private async Task<bool> ValidateAddRegionAsync(AddWalkRequest request)
         {
-            if (request == null)
-            {
-                ModelState.AddModelError(nameof(request), "AddWalkData is required");
-                return false;
-            }
+            //if (request == null)
+            //{
+            //    ModelState.AddModelError(nameof(request), "AddWalkData is required");
+            //    return false;
+            //}
 
-            if (string.IsNullOrEmpty(request.Name))
-                ModelState.AddModelError(nameof(request.Name), $"{nameof(request.Name)} cannot be empty");
+            //if (string.IsNullOrEmpty(request.Name))
+            //    ModelState.AddModelError(nameof(request.Name), $"{nameof(request.Name)} cannot be empty");
 
-            if (request.Length <= 0)
-                ModelState.AddModelError(nameof(request.Length), $"{nameof(request.Length)} cannot be zero or negative");
+            //if (request.Length <= 0)
+            //    ModelState.AddModelError(nameof(request.Length), $"{nameof(request.Length)} cannot be zero or negative");
 
-            if (request.RegionId == Guid.Empty)
-                ModelState.AddModelError(nameof(request.RegionId), $"{nameof(request.RegionId)} cannot be empty");
+            //if (request.RegionId == Guid.Empty)
+            //    ModelState.AddModelError(nameof(request.RegionId), $"{nameof(request.RegionId)} cannot be empty");
 
             var region = await regionRepository.GetAsync(request.RegionId);
             if (region  == null)
@@ -181,20 +184,20 @@ namespace NZWalks.API.Controllers
 
         private async Task<bool> ValidateUpdateRegionAsync(UpdateWalkRequest request)
         {
-            if (request == null)
-            {
-                ModelState.AddModelError(nameof(request), "UpdateWalkData is required");
-                return false;
-            }
+            //if (request == null)
+            //{
+            //    ModelState.AddModelError(nameof(request), "UpdateWalkData is required");
+            //    return false;
+            //}
 
-            if (string.IsNullOrEmpty(request.Name))
-                ModelState.AddModelError(nameof(request.Name), $"{nameof(request.Name)} cannot be empty");
+            //if (string.IsNullOrEmpty(request.Name))
+            //    ModelState.AddModelError(nameof(request.Name), $"{nameof(request.Name)} cannot be empty");
 
-            if (request.Length <= 0)
-                ModelState.AddModelError(nameof(request.Length), $"{nameof(request.Length)} cannot be zero or negative");
+            //if (request.Length <= 0)
+            //    ModelState.AddModelError(nameof(request.Length), $"{nameof(request.Length)} cannot be zero or negative");
 
-            if (request.RegionId == Guid.Empty)
-                ModelState.AddModelError(nameof(request.RegionId), $"{nameof(request.RegionId)} cannot be empty");
+            //if (request.RegionId == Guid.Empty)
+            //    ModelState.AddModelError(nameof(request.RegionId), $"{nameof(request.RegionId)} cannot be empty");
 
             var region = await regionRepository.GetAsync(request.RegionId);
             if (region  == null)
