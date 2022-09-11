@@ -80,10 +80,10 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> AddRegionAsync( [FromBody] AddRegionRequest addRegionRequest)
         {
             // Validate The Request
-            //if (!ValidateAddRegionAsync(addRegionRequest))
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ValidateAddRegionAsync(addRegionRequest))
+            {
+                return BadRequest(ModelState);
+            }
 
             // Request(DTO) to Domain model
             var region = new Models.Domain.Region()
@@ -115,6 +115,9 @@ namespace NZWalks.API.Controllers
 
             return CreatedAtAction(nameof(GetRegionAsync), new { id = regionDTO.Id }, regionDTO);
         }
+
+
+        
 
         [HttpDelete]
         [Route("{id:guid}")]
@@ -153,10 +156,10 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> UpdateRegionAsync([FromRoute] Guid id, [FromBody] UpdateRegionRequest updateRegionRequest)
         {
             // Validate the incoming request
-            //if (!ValidateUpdateRegionAsync(updateRegionRequest))
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ValidateUpdateRegionAsync(updateRegionRequest))
+            {
+                return BadRequest(ModelState);
+            }
 
             // Convert DTO to Domain model
             var region = new Models.Domain.Region()
@@ -196,5 +199,66 @@ namespace NZWalks.API.Controllers
             // Return Ok response
             return Ok(regionDTO);
         }
+
+
+        #region Private methods
+        private bool ValidateAddRegionAsync(Models.DTO.AddRegionRequest req)
+        {
+            if (req == null)
+            {
+                ModelState.AddModelError(nameof(req), "AddRegionData is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(req.Code))
+                ModelState.AddModelError(nameof(req.Code), $"{nameof(req.Code)} cannot be empty");
+
+            if (string.IsNullOrEmpty(req.Name))
+                ModelState.AddModelError(nameof(req.Name), $"{nameof(req.Name)} cannot be empty");
+
+            if (req.Area <= 0)
+                ModelState.AddModelError(nameof(req.Area), $"{nameof(req.Area)} cannot be zero or negative");
+
+            if (req.Lat <= 0)
+                ModelState.AddModelError(nameof(req.Lat), $"{nameof(req.Lat)} cannot be zero or negative");
+
+            if (req.Long <= 0)
+                ModelState.AddModelError(nameof(req.Long), $"{nameof(req.Long)} cannot be zero or negative");
+
+            if (req.Population < 0)
+                ModelState.AddModelError(nameof(req.Population), $"{nameof(req.Population)} cannot be negative");
+
+            return ModelState.ErrorCount == 0;
+        }
+
+        private bool ValidateUpdateRegionAsync(Models.DTO.UpdateRegionRequest req)
+        {
+            if (req == null)
+            {
+                ModelState.AddModelError(nameof(req), "UpdateRegionData is required");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(req.Code))
+                ModelState.AddModelError(nameof(req.Code), $"{nameof(req.Code)} cannot be empty");
+
+            if (string.IsNullOrEmpty(req.Name))
+                ModelState.AddModelError(nameof(req.Name), $"{nameof(req.Name)} cannot be empty");
+
+            if (req.Area <= 0)
+                ModelState.AddModelError(nameof(req.Area), $"{nameof(req.Area)} cannot be zero or negative");
+
+            if (req.Lat <= 0)
+                ModelState.AddModelError(nameof(req.Lat), $"{nameof(req.Lat)} cannot be zero or negative");
+
+            if (req.Long <= 0)
+                ModelState.AddModelError(nameof(req.Long), $"{nameof(req.Long)} cannot be zero or negative");
+
+            if (req.Population < 0)
+                ModelState.AddModelError(nameof(req.Population), $"{nameof(req.Population)} cannot be negative");
+
+            return ModelState.ErrorCount == 0;
+        }
+        #endregion
     }
 }
